@@ -112,11 +112,66 @@ async def newClientConnected(client_socket):
             await register(client_socket, data)
         elif data["purpose"] == "signIn":
             await signIn(client_socket, data)
+        elif data["purpose"] == "joinCommunity":
+            await joinCommunity(client_socket, data)
+        elif data["purpose"] == "createCommunity":
+            await createCommunity(client_socket, data)
     except:
         pass
 
 
+async def createCommunity(client_socket, data):
+    try:
+        sessionID = data["sessionToken"]
+        username = data["username"]
+        if username in sessionTokens.keys():
+            if sessionTokens[username] == sessionID:
+                community = dict()
+                community["name"] = data["name"]
+                communityCode = str(uuid.uuid4())
+                
+                setData(["communities", communityCode], community)
+                data = {"purpose": "createSuccess"}
+            else:
+                data = {"purpose": "fail"}
+        else:
+            data = {"purpose": "fail"}
+        await client_socket.send(json.dumps(data))
+    except:
+        pass
+    finally:
+        connectedClients.remove(client_socket)
 
+async def joinCommunity(client_socket, data):
+    try:
+        sessionID = data["sessionToken"]
+        username = data["username"]
+        if username in sessionTokens.keys():
+            if sessionTokens[username] == sessionID:
+                community = getData(["communities"])
+                communityCode = data["communityCode"]
+                
+                if communityCode in community.keys():
+                    currentCommunities = getData(["joinedCommunities",  username])
+                    if currentCommunities == None:
+                        currentCommunities = []
+                    if communityCode not in currentCommunities:
+                        currentCommunities.append(communityCode)
+                        setData(["joinedCommunities", username], currentCommunities)
+                        data = {"purpose": "joinSuccess"}
+                    else:
+                        data = {"purpose": "alreadyJoined"}
+                else:
+                    data = {"purpose": "communityNotFound"}
+            else:
+                data = {"purpose": "fail"}
+        else:
+            data = {"purpose": "fail"}
+        await client_socket.send(json.dumps(data))
+    except:
+        pass
+    finally:
+        connectedClients.remove(client_socket)
 
 
 async def register(client_socket, data):
