@@ -139,7 +139,7 @@ body {
     background-color: rgba(0, 0, 0, 0);
     padding: 0.5vw;
     border-style: none;
-    font-size: 1.5vw;
+    font-size: 1.3vw;
     border-radius: 10px;
     transition: background-color 0.1s;
 }
@@ -204,11 +204,6 @@ textarea {
 
 #postButton:active {
     background-color: rgb(20, 140, 80);
-}
-
-
-#communitiesSidebar button {
-    font-size: 1.25vw;
 }
 
 ::-webkit-scrollbar {

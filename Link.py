@@ -145,8 +145,90 @@ async def newClientConnected(client_socket):
             await createPost(client_socket, data)
         elif data["purpose"] == "signOut":
             await signOut(client_socket, data)
+        elif data["purpose"] == "addTag":
+            await addTag(client_socket, data)
+        elif data["purpose"] == "getUserTags":
+            await getUserTags(client_socket, data)
+        elif data["purpose"] == "deleteTag":
+            await deleteTag(client_socket, data)
     except:
         pass
+
+async def deleteTag(client_socket, data):
+    try:
+        sessionID = data["sessionToken"]
+        username = data["username"]
+        tag = data["tag"].strip()
+        
+        if username in sessionTokens.keys():
+            if sessionTokens[username] == sessionID:
+                tags = getData(["profileTags", username])
+                if tags == None:
+                    tags = []
+                if tag in tags:
+                    tags.remove(tag)
+                
+                setData(["profileTags", username], tags)
+                
+                data = {"purpose": "deleteSuccess"}
+            else:
+                data = {"purpose": "fail"}
+        else:
+            data = {"purpose": "fail"}
+        await client_socket.send(json.dumps(data))
+    except:
+        pass
+    finally:
+        connectedClients.remove(client_socket)
+
+async def getUserTags(client_socket, data):
+    try:
+        sessionID = data["sessionToken"]
+        username = data["username"]
+        if username in sessionTokens.keys():
+            if sessionTokens[username] == sessionID:
+                tags = getData(["profileTags", username])
+                if tags == None:
+                    tags = []
+                data = {"purpose": "fetchSuccess",
+                        "tags": tags}
+            else:
+                data = {"purpose": "fail"}
+        else:
+            data = {"purpose": "fail"}
+        await client_socket.send(json.dumps(data))
+    except:
+        pass
+    finally:
+        connectedClients.remove(client_socket)
+
+async def addTag(client_socket, data):
+    try:
+        sessionID = data["sessionToken"]
+        username = data["username"]
+        tag = data["tag"].strip()
+        
+        if username in sessionTokens.keys():
+            if sessionTokens[username] == sessionID:
+                currentTags = getData(["profileTags", username])
+                if currentTags == None:
+                    currentTags = []
+
+                if len(tag) >= 1:
+                    if tag not in currentTags:
+                        currentTags.append(tag)
+                        setData(["profileTags", username], currentTags)
+                        
+                data = {"purpose": "tagAddSuccess"}
+            else:
+                data = {"purpose": "fail"}
+        else:
+            data = {"purpose": "fail"}
+        await client_socket.send(json.dumps(data))
+    except:
+        pass
+    finally:
+        connectedClients.remove(client_socket)
 
 async def signOut(client_socket, data):
     try:

@@ -8,6 +8,7 @@ const createBtn = document.getElementById("createBtn");
 const joinPopup = document.getElementById("joinPopup");
 const createPopup = document.getElementById("createPopup");
 const postPopup = document.getElementById("postPopup");
+const profileTagsPopup = document.getElementById("profileTagsPopup")
 const closeButtons = document.querySelectorAll(".close");
 const communitiesPage = document.getElementById("communities");
 const communityInfoPage = document.getElementById("communityInfo");
@@ -432,6 +433,115 @@ document.getElementById("signOutButton").addEventListener("click", function() {
         socket.close(1000, "Closing Connection");   
     };
 });
+
+document.getElementById("profileTagsButton").addEventListener("click", function() {
+    closeAllPopups();
+    profileTagsPopup.style.display = "block";
+    fetchUserTags();
+})
+
+document.getElementById("profileTagsBox").addEventListener("keydown", function(event) {
+    if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        const tagInput = this.value.trim();
+        
+        if (tagInput !== "") {
+            const isLocalConnection = window.location.hostname === '10.0.0.138';
+            const socket = new WebSocket(isLocalConnection ? 'ws://10.0.0.138:1134' : 'ws://99.245.65.253:1134');
+
+            const data = {
+                purpose: "addTag",
+                username: username,
+                sessionToken: sessionID,
+                tag: tagInput
+            };
+            
+            socket.onopen = function (event) {
+                socket.send(JSON.stringify(data));
+            };
+
+            socket.onmessage = function(event) {
+                var data = JSON.parse(event.data);
+                if (data.purpose == "fail") {
+                    alert("Session Invalid Or Expired");
+                    window.location.href = "../signIn/signIn.html";
+                }
+                else if (data.purpose == "tagAddSuccess") {
+                    this.value = "";
+                    updateTagsDisplay();
+                }
+                socket.close(1000, "Closing Connection");   
+            };
+        }
+    }
+});
+
+function fetchUserTags() {
+    const isLocalConnection = window.location.hostname === "10.0.0.138";
+    const socket = new WebSocket(isLocalConnection ? "ws://10.0.0.138:1134" : "ws://99.246.0.254:1134");
+
+    const data = {
+        purpose: "getUserTags",
+        username: username,
+        sessionToken: sessionID,
+    };
+
+    socket.onopen = function(event) {
+        socket.send(JSON.stringify(data));
+    };
+
+    socket.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        if (data.purpose === "fetchSuccess") {
+            updateTagsDisplay(data.tags);
+        }
+        else if (data.purpose == "fail") {
+            alert("Session Invalid Or Expired");
+            window.location.href = "../signIn/signIn.html";
+        }
+        socket.close(1000, "Closing Connection");
+    };
+}
+
+function updateTagsDisplay(tags) {
+    const tagsDiv = document.getElementById("profileTagsContainer");
+    tagsDiv.innerHTML = "";
+    
+    tags.forEach(tag => {
+        const tagElement = document.createElement("div");
+        tagElement.classList.add("profileTagBox");
+        tagElement.textContent = tag;
+        tagElement.dataset.tagName = tag;
+
+        tagElement.addEventListener("click", function() {
+            const isLocalConnection = window.location.hostname === "10.0.0.138";
+            const socket = new WebSocket(isLocalConnection ? "ws://10.0.0.138:1134" : "ws://99.246.0.254:1134");
+
+            const data = {
+                purpose: "deleteTag",
+                username: username,
+                sessionToken: sessionID,
+                tag: this.dataset.tagName
+            };
+            
+            socket.onopen = function(event) {
+                socket.send(JSON.stringify(data));
+            };
+
+            socket.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                if (data.purpose === "deleteSuccess") {
+                    updateTagsDisplay();
+                }
+                else if (data.purpose == "fail") {
+                    alert("Session Invalid Or Expired");
+                    window.location.href = "../signIn/signIn.html";
+                }
+                socket.close(1000, "Closing Connection");
+            };        
+        });
+    });
+}
 
 document.getElementById("homeButton").addEventListener("click", function() {
     fetchUserCommunities();
