@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300&display=swap');
 
 body {
-    background-image: url("..images/externalBackground.png");
+    background-image: url("../images/externalBackground.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: bottom;
@@ -47,21 +47,21 @@ input {
 }
 
 #username {
-    background-image: url("..images/usernameIcon.png");
+    background-image: url("../images/usernameIcon.png");
     background-size: 20px;
     background-repeat: no-repeat;
     background-position: 10px;
 }
 
 #password {
-    background-image: url("..images/passwordIcon.png");
+    background-image: url("../images/passwordIcon.png");
     background-size: 20px;
     background-repeat: no-repeat;
     background-position: 10px;
 }
 
 #confirm {
-    background-image: url("..images/passwordIcon.png");
+    background-image: url("../images/passwordIcon.png");
     background-size: 20px;
     background-repeat: no-repeat;
     background-position: 10px;
