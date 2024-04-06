@@ -6,6 +6,27 @@ import json
 import hashlib
 import  uuid
 import websockets
+from gensim.models import Word2Vec
+
+matchModel = Word2Vec.load("matchModel/matchModel.model")
+
+def determineSimilarity(w1, w2):
+    try:
+        return matchModel.wv.similarity(w1=w1, w2=w2)
+    except:
+        return 0.25
+
+def calculateMatchScore(partyA, partyB):
+    matchScores = []
+    for i in partyA:
+        currentTermScores = []
+        for j in partyB:
+            currentTermScores.append(determineSimilarity(i, j))
+        if len(currentTermScores) > 0:
+            matchScores.append(max(currentTermScores))
+    if len(matchScores) == 0:
+        return 0
+    return min((sum(matchScores) / len(matchScores)) * 1.15, 1)
 
 sessionTokens = dict()
 
