@@ -116,9 +116,42 @@ async def newClientConnected(client_socket):
             await joinCommunity(client_socket, data)
         elif data["purpose"] == "createCommunity":
             await createCommunity(client_socket, data)
+        elif data["purpose"] == "getUserCommunities":
+            await getUserCommunities(client_socket, data)
     except:
         pass
 
+async def getUserCommunities(client_socket, data):
+    try:
+        sessionID = data["sessionToken"]
+        username = data["username"]
+        if username in sessionTokens.keys():
+            if sessionTokens[username] == sessionID:
+                joinedCommunities = []
+                communities = getData(["communities"])
+                userCommunities = getData(["joinedCommunities", username])
+                
+                if communities == None:
+                    communities = {}
+                
+                if userCommunities == None:
+                    userCommunities = []
+                
+                for i in userCommunities:
+                    if i in communities.keys():
+                        joinedCommunities.append(communities[i]["data"])
+                
+                data = {"purpose": "fetchSuccess",
+                        "communities": joinedCommunities}
+            else:
+                data = {"purpose": "fail"}
+        else:
+            data = {"purpose": "fail"}
+        await client_socket.send(json.dumps(data))
+    except:
+        pass
+    finally:
+        connectedClients.remove(client_socket)
 
 async def createCommunity(client_socket, data):
     try:
@@ -127,7 +160,10 @@ async def createCommunity(client_socket, data):
         if username in sessionTokens.keys():
             if sessionTokens[username] == sessionID:
                 community = dict()
-                community["name"] = data["name"]
+                community["data"] = {}
+                cData = community["data"]
+                cData["communityName"] = data["communityName"]
+                
                 communityCode = str(uuid.uuid4())
                 
                 setData(["communities", communityCode], community)
@@ -151,6 +187,9 @@ async def joinCommunity(client_socket, data):
                 community = getData(["communities"])
                 communityCode = data["communityCode"]
                 
+                if community == None:
+                    community = {}
+            
                 if communityCode in community.keys():
                     currentCommunities = getData(["joinedCommunities",  username])
                     if currentCommunities == None:
