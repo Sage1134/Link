@@ -29,7 +29,6 @@ body {
     height: 7vh;
 }
 
-
 #content {
     padding: 2vw 2vh;
     margin-left: 15.5vw;
@@ -54,12 +53,6 @@ body {
     background-color: rgb(200, 200, 200);
 }
 
-#joinCommunity {
-    position: absolute;
-    left: 95vw;
-    top: 92.5vh;
-}
-
 .popup {
     display: none;
     position: absolute;
@@ -71,18 +64,18 @@ body {
     padding: 20px;
     z-index: 9999;
 }
-  
+
 .popup-content {
     text-align: center;
 }
-  
+
 .close {
     position: absolute;
     top: 5px;
     right: 10px;
     cursor: pointer;
 }
-  
+
 #communities {
     display: flex;
     flex-wrap: wrap;
@@ -94,13 +87,16 @@ body {
 }
 
 .post-box {
-    height: 8vw;
+    min-height: 8vw;
+    max-height: 20vw;
+    height: auto;
     width: 80vw;
     border-radius: 8px;
     border: solid rgb(0, 0, 0);
     border-width: 1px;
     margin: 1vw;
     background-color: rgb(245, 245, 245);
+    overflow-y: auto;
 }
 
 .community-box {
@@ -111,6 +107,20 @@ body {
     border-width: 1px;
     margin: 1vw;
     background-color: rgb(200, 200, 200);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#communitiesSidebar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-top: 1px solid rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+    margin: 0.25vw;
 }
 
 #title {
@@ -121,6 +131,7 @@ body {
 
 #titleText {
     margin-left: 0.5vw;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
     color: white;
 }
 
@@ -141,6 +152,64 @@ body {
     background-color: rgba(0, 0, 0, 0.2);
 }
 
+textarea {
+    resize: none;
+}
+
+#joinCommunity {
+    position: absolute;
+    left: 95vw;
+    top: 90vh;
+    display: none;
+    width: 3vw;
+    height: 3vw;
+    border-radius: 50%;
+    font-size: 1.5vw;
+    background-color: rgb(40, 220, 120);
+    color: white;
+    border: solid; 
+    border-color: rgb(20, 160, 80);
+    cursor: pointer;
+    transition: background-color 0.2s'
+}
+
+#joinCommunity:hover {
+    background-color: rgb(30, 180, 100);
+}
+
+#joinCommunity:active {
+    background-color: rgb(20, 140, 80);
+}
+
+#postButton {
+    position: absolute;
+    left: 95vw;
+    top: 90vh;
+    display: none;
+    width: 3vw;
+    height: 3vw;
+    border-radius: 50%;
+    font-size: 0.75vw;
+    background-color: rgb(40, 220, 120);
+    color: white;
+    border: solid; 
+    border-color: rgb(20, 160, 80);
+    cursor: pointer;
+    transition: background-color 0.2s'
+}
+
+#postButton:hover {
+    background-color: rgb(30, 180, 100);
+}
+
+#postButton:active {
+    background-color: rgb(20, 140, 80);
+}
+
+
+#communitiesSidebar button {
+    font-size: 1.25vw;
+}
 
 ::-webkit-scrollbar {
     width: 8px;

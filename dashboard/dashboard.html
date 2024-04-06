@@ -15,14 +15,15 @@
     </div>
     <div id="container">
         <div id="sideBar">
-            <button>Home</button>
+            <button id="homeButton">Home</button>
             <div id="communitiesSidebar"></div>
-            <button>Sign Out</button>
+            <button id="signOutButton">Sign Out</button>
         </div>
         <div id="content">
             <div id="communities"></div>
             <div id="communityInfo"></div>
             <button id="joinCommunity">+</button>
+            <button id="postButton">Post</button>
 
             <div id="communityPopup" class="popup">
                 <div class="popup-content">
@@ -55,7 +56,10 @@
                     <span class="close">X</span>
                     <p>Create a post:</p>
                     <input type="text" id="postTitle" placeholder="Title">
+                    <input type="text" id="postDescription" placeholder="Description">
+                    <input type="text" id="postTags" placeholder="Tags">
                     <button id="postSubmitBtn">Post</button>
+                    <div id="tagsContainer"></div>
                 </div>
             </div>
         </div>

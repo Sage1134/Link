@@ -122,8 +122,29 @@ async def newClientConnected(client_socket):
             await getCommunityExtracurriculars(client_socket, data)
         elif data["purpose"] == "createPost":
             await createPost(client_socket, data)
+        elif data["purpose"] == "signOut":
+            await signOut(client_socket, data)
     except:
         pass
+
+async def signOut(client_socket, data):
+    try:
+        sessionID = data["sessionToken"]
+        username = data["username"]
+
+        if username in sessionTokens.keys():
+            if sessionTokens[username] == sessionID:
+                del sessionTokens[username]
+                data = {"purpose": "signOutSuccess"}
+            else:
+                data = {"purpose": "fail"}
+        else:
+            data = {"purpose": "fail"}
+        await client_socket.send(json.dumps(data))
+    except:
+        pass
+    finally:
+        connectedClients.remove(client_socket)
 
 async def getCommunityExtracurriculars(client_socket, data):
     try:
@@ -153,16 +174,17 @@ async def createPost(client_socket, data):
         username = data["username"]
         communityCode = data["communityCode"]
         title = data["postTitle"]
+        description = data["postDescription"]
+        tags = data["tags"]
         
         if username in sessionTokens.keys():
             if sessionTokens[username] == sessionID:
                 currentPosts = getData(["communities", communityCode, "extracurriculars"])
-                if currentPosts == None:
+                if currentPosts is None:
                     currentPosts = []
                 
-                post = {}
-                post["title"] = title
-                
+                post = {"title": title, "description": description, "tags": tags}
+               
                 currentPosts.append(post)
                 
                 setData(["communities", communityCode, "extracurriculars"], currentPosts)
@@ -173,10 +195,11 @@ async def createPost(client_socket, data):
         else:
             data = {"purpose": "fail"}
         await client_socket.send(json.dumps(data))
-    except:
+    except Exception as e:
         pass
     finally:
         connectedClients.remove(client_socket)
+
 
 async def getUserCommunities(client_socket, data):
     try:
@@ -225,6 +248,14 @@ async def createCommunity(client_socket, data):
                 cData["communityCode"] = communityCode
                 
                 setData(["communities", communityCode], community)
+                
+                currentCommunities = getData(["joinedCommunities", username])
+                if currentCommunities is None:
+                    currentCommunities = []
+                    
+                currentCommunities.append(communityCode)
+                setData(["joinedCommunities", username], currentCommunities)
+
                 data = {"purpose": "createSuccess"}
             else:
                 data = {"purpose": "fail"}
