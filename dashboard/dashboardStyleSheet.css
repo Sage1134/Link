@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+
+body {
+    font-family: 'Rubik', sans-serif;
+    margin: 0;
+    background-color: rgb(245, 245, 245);
+}
+
+#container {
+    background-color: rgb(245, 245, 245);
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#head {
+    background-color: rgb(225, 225, 225);
+    width: 100%;
+    height: 10vh;
+    border: 0;
+    border-bottom: 0.5vw solid rgb(180, 200, 180);
+    position: fixed;
+    z-index: 9999;
+    display: flex;
+}
+
+#head img {
+    width: 4vh;
+    height: 4vh;
+}
+
+
+#content {
+    padding: 2vw 2vh;
+    margin-left: 15.5vw;
+    margin-top: 10vh;
+    text-align: center;
+    height: 80vh;
+    background-color: rgb(245, 245, 245);
+    overflow-y: auto;
+}
+
+#sideBar {
+    border-right: 0.5vw solid rgb(180, 200, 180);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 13vh;
+    width: 15vw;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    background-color: rgb(235, 235, 235);
+}
+
+#joinCommunity {
+    position: absolute;
+    left: 95vw;
+    top: 92.5vh;
+}
+
+.popup {
+    display: none;
+    position: absolute;
+    top: calc(50% - 100px);
+    left: calc(50% - 150px);
+    width: 300px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    padding: 20px;
+    z-index: 9999;
+  }
+  
+  .popup-content {
+    text-align: center;
+  }
+  
+  .close {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+  }
+  
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.2);
+}

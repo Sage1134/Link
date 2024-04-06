@@ -7,16 +7,46 @@
     <title>Link</title>
 </head>
 <body>
+    <div id="head">
+        <h1>Welcome</h1>
+        <img src="../images/usernameIcon.png" alt="Icon">
+    </div>
     <div id="container">
-        <div id="head"></div>
         <div id="sideBar">
-            sidebar
+            <button>Home</button>
+            <div id="communitiesSidebar"></div>
+            <button>Sign Out</button>
         </div>
-        <div id="mainPanel">
-            main Panel
-        </div>
-        <div id="bottom">
-            bottom
+        <div id="content">
+            <div id="communities">communities</div>
+            <button id="joinCommunity">+</button>
+
+            <div id="communityPopup" class="popup">
+                <div class="popup-content">
+                    <span class="close">X</span>
+                    <p>Do you want to join a community or create one?</p>
+                    <button id="joinBtn">Join Community</button>
+                    <button id="createBtn">Create Community</button>
+                </div>
+            </div>
+
+            <div id="joinPopup" class="popup">
+                <div class="popup-content">
+                    <span class="close">X</span>
+                    <p>Enter the community code:</p>
+                    <input type="text" id="communityCodeInput" placeholder="Community Code">
+                    <button id="joinSubmitBtn">Join</button>
+                </div>
+            </div>
+            
+            <div id="createPopup" class="popup">
+                <div class="popup-content">
+                    <span class="close">X</span>
+                    <p>Create a new community:</p>
+                    <input type="text" id="communityNameInput" placeholder="Community Name">
+                    <button id="createSubmitBtn">Create</button>
+                </div>
+            </div>
         </div>
     </div>
     <script src="dashboardScript.js"></script>
