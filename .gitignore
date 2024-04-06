@@ -1,3 +1,5 @@
 Vars.env
 model/textTrainingData.txt
 textTrainingData.txt
+matchModel.model.syn1neg.npy
+matchModel.model.wv.vectors.npy
