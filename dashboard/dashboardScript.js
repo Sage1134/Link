@@ -467,8 +467,8 @@ document.getElementById("profileTagsBox").addEventListener("keydown", function(e
                     window.location.href = "../signIn/signIn.html";
                 }
                 else if (data.purpose == "tagAddSuccess") {
-                    this.value = "";
-                    updateTagsDisplay();
+                    document.getElementById("profileTagsBox").value = "";
+                    fetchUserTags();
                 }
                 socket.close(1000, "Closing Connection");   
             };
@@ -506,9 +506,9 @@ function fetchUserTags() {
 function updateTagsDisplay(tags) {
     const tagsDiv = document.getElementById("profileTagsContainer");
     tagsDiv.innerHTML = "";
-    
+
     tags.forEach(tag => {
-        const tagElement = document.createElement("div");
+        const tagElement = document.createElement("button");
         tagElement.classList.add("profileTagBox");
         tagElement.textContent = tag;
         tagElement.dataset.tagName = tag;
@@ -523,7 +523,7 @@ function updateTagsDisplay(tags) {
                 sessionToken: sessionID,
                 tag: this.dataset.tagName
             };
-            
+
             socket.onopen = function(event) {
                 socket.send(JSON.stringify(data));
             };
@@ -531,17 +531,19 @@ function updateTagsDisplay(tags) {
             socket.onmessage = function(event) {
                 const data = JSON.parse(event.data);
                 if (data.purpose === "deleteSuccess") {
-                    updateTagsDisplay();
-                }
-                else if (data.purpose == "fail") {
+                    fetchUserTags();
+                } else if (data.purpose == "fail") {
                     alert("Session Invalid Or Expired");
                     window.location.href = "../signIn/signIn.html";
                 }
                 socket.close(1000, "Closing Connection");
-            };        
+            };
         });
+
+        tagsDiv.appendChild(tagElement);
     });
 }
+
 
 document.getElementById("homeButton").addEventListener("click", function() {
     fetchUserCommunities();
