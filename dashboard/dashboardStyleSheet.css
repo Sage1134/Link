@@ -41,42 +41,73 @@ button {
 
 #head button {
     padding: 9px 25px;
-    background-color: rgba(130, 180, 120, 1);
+    background-color: rgb(110, 180, 110);
     border: none;
     border-radius: 50px;
     cursor: pointer;
     transition: all 0.3s ease 0s;
     margin-right: 1vw;
+    box-shadow: 0 0 8px rgba(100, 255, 100, 0.5);
 }
 
-#head button :hover {
-    background-color: rgba(0, 136, 169, 8);
+#head button:hover {
+    background-color: rgb(80, 150, 80);
 }
 
 .logo {
     cursor: pointer;
 }
 
-.nav__links {
-    list-style: none;
+#nav button {
+    box-shadow: none;
 }
 
-.nav__links li {
-    display: inline-block;
-    padding: 0px 20px;
+#nav button:hover {
+    color: rgb(100, 200, 140);
 }
 
-.nav__links li a {
-    transition: all 0.3s ease 0s;
-}
-
-.nav__links li a:hover {
-    color: #0088a9
+#nav button:active {
+    color: rgb(60, 150, 80);
 }
 
 #head img {
     width: 7vh;
     height: 7vh;
+}
+
+.notification {
+    position: fixed;
+    top: 15%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    color: white;
+}
+
+.community-code {
+    background-color: #0088a9;
+    border-radius: 10px;
+    margin: 1vw;
+    padding: 0.5vw;
+    color: white;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(0, 0, 80);
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.1s;
+}
+
+.community-code:hover {
+    background-color: rgb(0, 120, 150);
+}
+
+.community-code:active {
+    background-color: rgb(0, 100, 130);
 }
 
 #content {
@@ -136,6 +167,7 @@ button {
 
 #tagsContainer button {
     background-color: rgb(0, 136, 169);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
 #tagsContainer button:hover {
@@ -148,6 +180,7 @@ button {
 
 #profileTagsContainer button {
     background-color: rgb(0, 136, 169);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
 #profileTagsContainer button:hover {
@@ -177,12 +210,13 @@ button {
 
 .popup-content input {
     height: 30px;
+    margin: 1vw;
 }
 
 .popup-content button {
     padding: 10px 20px;
     border: none;
-    background-color: rgb(60, 75, 120);
+    background-color: rgb(20, 110, 140);
     color: #fff;
     font-size: 16px;
     cursor: pointer;
@@ -193,11 +227,11 @@ button {
 }
 
 .popup-content button:hover {
-    background-color: rgb(50, 65, 100);
+    background-color: rgb(10, 80, 100);
 }
 
 .popup-content button:active {
-    background-color: rgb(40, 55, 80);
+    background-color: rgb(0, 60, 80);
 }
 
 .popup-content {
@@ -274,8 +308,14 @@ button {
     align-items: center;
     text-align: center;
     position: relative;
-    overflow: hidden;
     box-shadow: 5px 5px 10px rgba(60, 80, 100, 0.5);
+    overflow: hidden;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.community-box:hover {
+    background-color: rgb(255, 255, 255);
+    box-shadow: 5px 5px 15px rgba(100, 100, 100, 0.8);
 }
 
 .community-box::before {
@@ -326,7 +366,9 @@ button {
     font-size: 1.3vw;
     border-radius: 10px;
     transition: background-color 0.1s;
-    color: rgb(210, 220, 230);
+    color: rgb(210, 220, 230);    
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #sideBar button:hover {
@@ -343,53 +385,53 @@ textarea {
 
 #joinCommunity {
     position: absolute;
-    left: 95vw;
-    top: 90vh;
+    left: 94vw;
+    top: 88vh;
     display: none;
-    width: 3vw;
-    height: 3vw;
+    width: 4vw;
+    height: 4vw;
     border-radius: 50%;
     font-size: 1.5vw;
-    background-color: rgb(40, 220, 120);
+    background-color: rgb(30, 120, 170);
     color: white;
     border: solid;
-    border-color: rgb(40, 120, 80);
+    border-color: rgb(0, 60, 80);
     cursor: pointer;
     transition: background-color 0.2s'
 
 }
 
 #joinCommunity:hover {
-    background-color: rgb(30, 160, 100);
+    background-color: rgb(30, 100, 140);
 }
 
 #joinCommunity:active {
-    background-color: rgb(20, 140, 80);
+    background-color: rgb(20, 80, 100);
 }
 
 #postButton {
     position: absolute;
-    left: 95vw;
-    top: 90vh;
+    left: 94vw;
+    top: 88vh;
     display: none;
-    width: 3vw;
-    height: 3vw;
+    width: 4vw;
+    height: 4vw;
     border-radius: 50%;
-    font-size: 0.75vw;
-    background-color: rgb(40, 220, 120);
+    font-size: 1vw;
+    background-color: rgb(30, 120, 170);
     color: white;
     border: solid;
-    border-color: rgb(40, 120, 80);
+    border-color: rgb(0, 60, 80);
     cursor: pointer;
     transition: background-color 0.2s
 }
 
 #postButton:hover {
-    background-color: rgb(30, 160, 100);;
+    background-color: rgb(30, 100, 140);
 }
 
 #postButton:active {
-    background-color: rgb(20, 140, 80);
+    background-color: rgb(20, 80, 100);
 }
 
 #nav button {

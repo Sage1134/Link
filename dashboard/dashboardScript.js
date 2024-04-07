@@ -207,12 +207,41 @@ function fetchCommunityExtracurriculars() {
     };
 }
 
+function copyToClipboard(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+}
+
+function showNotification(message, duration) {
+    const notification = document.createElement("div");
+    notification.textContent = message;
+    notification.classList.add("notification");
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.remove();
+    }, duration);
+}
+
 function updateExtracurricularsUI(extracurriculars) {
     const communityInfoDiv = document.getElementById("communityInfo");
+    const currentCommunity = getLocalStorageItem("currentCommunity")
     communityInfoDiv.innerHTML = "";
 
     const newParagraph = document.createElement("p");
-    newParagraph.textContent = "Community Code: " + getLocalStorageItem("currentCommunity");
+    newParagraph.textContent = "Community Code: " + currentCommunity;
+    newParagraph.classList.add("community-code")
+
+    newParagraph.addEventListener("click", function() {
+        copyToClipboard(currentCommunity);
+        showNotification("Code copied to clipboard!", 1500);
+    });
+
     communityInfoDiv.appendChild(newParagraph);
 
     joinCommunityBtn.style.display = "None";
@@ -285,9 +314,11 @@ joinSubmitBtn.addEventListener("click", function() {
             closeAllPopups();
             fetchUserCommunities();
         } else if (data.purpose == "alreadyJoined") {
-            console.log("already");
+            alert("You are already a part of this class!");
+            document.getElementById("communityCodeInput").value = "";
         } else if (data.purpose == "communityNotFound") {
-            console.log("notFound");
+            alert("A community was not found with this code!");
+            document.getElementById("communityCodeInput").value = "";
         } else if (data.purpose == "fail") {
             alert("Session Invalid Or Expired");
             window.location.href = "../signIn/signIn.html";
@@ -383,23 +414,28 @@ document.getElementById("postTags").addEventListener("keydown", function(event) 
         event.preventDefault();
         const tagInput = this.value.trim();
         if (tagInput !== "") {
-            const tagButton = document.createElement("button");
-            tagButton.textContent = tagInput;
-            tagButton.classList.add("tag-button");
-            tagButton.addEventListener("click", function() {
-                removeTagFromList(tagButton.textContent);
-                this.remove();
-            });
-            document.getElementById("tagsContainer").appendChild(tagButton);
-            addTagToList(tagButton.textContent);
-            this.value = "";
+            if (tagsList.includes(tagInput.toLowerCase())) {
+                alert("This tag already exists!");
+            }
+            else {
+                const tagButton = document.createElement("button");
+                tagButton.textContent = tagInput;
+                tagButton.classList.add("tag-button");
+                tagButton.addEventListener("click", function() {
+                    removeTagFromList(tagButton.textContent);
+                    this.remove();
+                });
+                document.getElementById("tagsContainer").appendChild(tagButton);
+                addTagToList(tagButton.textContent.toLowerCase());
+                this.value = "";
+            }
         }
     }
 });
 
 document.getElementById("signOutButton").addEventListener("click", function() {
     const isLocalConnection = window.location.hostname === '10.0.0.138';
-    const socket = new WebSocket(isLocalConnection ? 'ws://10.0.0.138:1134' : 'ws://99.245.65.253:1134');
+    const socket = new WebSocket(isLocalConnection ? 'ws://10.0.0.138:1134' : 'ws://99.246.0.254:1134');
 
     const data = {
         purpose: "signOut",
@@ -438,7 +474,7 @@ document.getElementById("profileTagsBox").addEventListener("keydown", function(e
 
         if (tagInput !== "") {
             const isLocalConnection = window.location.hostname === '10.0.0.138';
-            const socket = new WebSocket(isLocalConnection ? 'ws://10.0.0.138:1134' : 'ws://99.245.65.253:1134');
+            const socket = new WebSocket(isLocalConnection ? 'ws://10.0.0.138:1134' : 'ws://99.246.0.254:1134');
 
             const data = {
                 purpose: "addTag",
@@ -456,6 +492,10 @@ document.getElementById("profileTagsBox").addEventListener("keydown", function(e
                 if (data.purpose == "fail") {
                     alert("Session Invalid Or Expired");
                     window.location.href = "../signIn/signIn.html";
+                } else if (data.purpose == "tagExists") {
+                    alert("Your profile already has this tag!");
+                } else if (data.purpose == "tagFail") {
+                    alert("You entered an invalid tag!");
                 } else if (data.purpose == "tagAddSuccess") {
                     document.getElementById("profileTagsBox").value = "";
                     fetchUserTags();

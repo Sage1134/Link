@@ -251,7 +251,7 @@ async def addTag(client_socket, data):
         sessionID = data["sessionToken"]
         username = data["username"]
         tag = data["tag"].strip().lower()
-        
+
         if username in sessionTokens.keys():
             if sessionTokens[username] == sessionID:
                 currentTags = getData(["profileTags", username])
@@ -260,10 +260,15 @@ async def addTag(client_socket, data):
 
                 if len(tag) >= 1:
                     if tag not in currentTags:
+                        if len(tag) > 36:
+                            tag = tag[0:36]
                         currentTags.append(tag)
                         setData(["profileTags", username], currentTags)
-                        
-                data = {"purpose": "tagAddSuccess"}
+                        data = {"purpose": "tagAddSuccess"}
+                    else:
+                        data = {"purpose": "tagExists"}
+                else:
+                    data = {"purpose": "tagFail"}
             else:
                 data = {"purpose": "fail"}
         else:
@@ -330,7 +335,24 @@ async def createPost(client_socket, data):
                 if currentPosts is None:
                     currentPosts = []
                 
-                post = {"title": title, "description": description, "tags": tags}
+                for i in enumerate(tags):
+                    tags[i[0]] = i[1].lower()
+                    if len(i[1]) > 36:
+                        tags[i[0]] = i[1][0:36]
+
+                uniqueTags = []
+
+                for tag in tags:
+                    if tag not in uniqueTags:
+                        uniqueTags.append(tag)
+                
+                if len(title) > 36:
+                    title = title[0:36]
+                
+                if len(description) > 1000:
+                    description = description[0:1000]
+                
+                post = {"title": title, "description": description, "tags": uniqueTags}
                
                 currentPosts.append(post)
                 
@@ -342,7 +364,7 @@ async def createPost(client_socket, data):
         else:
             data = {"purpose": "fail"}
         await client_socket.send(json.dumps(data))
-    except Exception as e:
+    except:
         pass
     finally:
         connectedClients.remove(client_socket)
@@ -391,7 +413,13 @@ async def createCommunity(client_socket, data):
                 
                 community["data"] = {}
                 cData = community["data"]
-                cData["communityName"] = data["communityName"]
+                
+                communityName = data["communityName"]
+                
+                if len(communityName) > 36:
+                    communityName = communityName[0:36]
+                    
+                cData["communityName"] = communityName
                 cData["communityCode"] = communityCode
                 
                 setData(["communities", communityCode], community)

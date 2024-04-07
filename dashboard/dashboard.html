@@ -18,7 +18,6 @@
         <div id="nav">
             <button id="communitiesButton">Communities</button>
             <button id="linkButton">Link!</button>
-            <button>Placeholder</button>
         </div>
         <a class="cta" href="#" id="signOutButton"><button>Sign Out</button></a>
     </div>
@@ -48,7 +47,7 @@
                 <div class="popup-content">
                     <span class="close">X</span>
                     <p>Enter the community code:</p>
-                    <input type="text" id="communityCodeInput" placeholder="Community Code">
+                    <input type="text" id="communityCodeInput" placeholder="Community Code" maxlength="36">
                     <button id="joinSubmitBtn">Join</button>
                 </div>
             </div>
@@ -57,7 +56,7 @@
                 <div class="popup-content">
                     <span class="close">X</span>
                     <p>Create a new community:</p>
-                    <input type="text" id="communityNameInput" placeholder="Community Name">
+                    <input type="text" id="communityNameInput" placeholder="Community Name" maxlength="36">
                     <button id="createSubmitBtn">Create</button>
                 </div>
             </div>
@@ -65,9 +64,9 @@
                 <div class="popup-content">
                     <span class="close">X</span>
                     <p>Create a post:</p>
-                    <input type="text" id="postTitle" placeholder="Title">
-                    <input type="text" id="postDescription" placeholder="Description">
-                    <input type="text" id="postTags" placeholder="Tags">
+                    <input type="text" id="postTitle" placeholder="Title" maxlength="36">
+                    <input type="text" id="postDescription" placeholder="Description" maxlength="1000">
+                    <input type="text" id="postTags" placeholder="Tags (Space To Split)" maxlength="36">
                     <button id="postSubmitBtn">Post</button>
                     <div id="tagsContainer"></div>
                 </div>
@@ -76,7 +75,7 @@
                 <div class="popup-content">
                     <span class="close">X</span>
                     <p>Manage Profile Tags</p>
-                    <input type="text" id="profileTagsBox" placeholder="Tags">
+                    <input type="text" id="profileTagsBox" placeholder="Tags (Space To Split)" maxlength="36">
                     <div id="profileTagsContainer"></div>
                 </div>
             </div>
