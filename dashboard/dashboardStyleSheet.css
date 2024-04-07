@@ -64,6 +64,7 @@ button {
 
 #nav button:hover {
     color: rgb(100, 200, 140);
+    background-color: rgba(0, 0, 0, 0);
 }
 
 #nav button:active {
@@ -397,7 +398,7 @@ textarea {
     border: solid;
     border-color: rgb(0, 60, 80);
     cursor: pointer;
-    transition: background-color 0.2s'
+    transition: background-color 0.2s
 
 }
 
