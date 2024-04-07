@@ -18,6 +18,9 @@ const homeButton = document.getElementById("homeButton");
 const linkPopup = document.getElementById("linkPopup");
 const matches = document.getElementById("matches");
 const communityButton = document.getElementById("communityButton");
+const peopleButton = document.getElementById("peopleButton");
+const peopleDiv = document.getElementById("people");
+const peoplePopup = document.getElementById("peoplePopup")
 
 let tagsList = [];
 
@@ -123,6 +126,56 @@ function updateCommunitiesUI(communities) {
         });
 
         communitiesPage.appendChild(communityElement);
+    });
+}
+
+peopleButton.addEventListener("click", function() {
+    if (currentCommunity == undefined || currentCommunity == null) {
+        alert("Open a community page!");
+    }
+    else {
+        closeAllPopups();
+        fetchCommunityPeople();
+    }
+});
+
+function fetchCommunityPeople() {
+    const isLocalConnection = window.location.hostname === "10.0.0.138";
+    const socket = new WebSocket(isLocalConnection ? "ws://10.0.0.138:1134" : "ws://99.246.0.254:1134");
+    const communityCode = getLocalStorageItem("currentCommunity");
+
+    const data = {
+        purpose: "getPeople",
+        username: username,
+        sessionToken: sessionID,
+        communityCode: communityCode
+    };
+
+    socket.onopen = function(event) {
+        socket.send(JSON.stringify(data));
+    };
+
+    socket.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        if (data.purpose === "fetchSuccess") {
+            updatePeopleUI(data.people);
+        } else if (data.purpose == "fail") {
+            alert("Session Invalid Or Expired");
+            window.location.href = "../signIn/signIn.html";
+        }
+        socket.close(1000, "Closing Connection");
+    };
+}
+
+function updatePeopleUI(people) {
+    peoplePopup.style.display = "Block";
+
+    people.forEach(person => {
+        const personElement = document.createElement("div");
+        personElement.classList.add("person-box");
+        personElement.textContent = person.username;
+
+        peopleDiv.appendChild(personElement);
     });
 }
 

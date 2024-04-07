@@ -4,7 +4,7 @@ import os
 import asyncio
 import json
 import hashlib
-import  uuid
+import uuid
 import websockets
 from gensim.models import Word2Vec
 
@@ -153,6 +153,8 @@ async def newClientConnected(client_socket):
             await deleteTag(client_socket, data)
         elif data["purpose"] == "link":
             await link(client_socket, data)
+        elif data["purpose"] == "getPeople":
+            await getPeople(client_socket, data)
     except:
         pass
 
@@ -197,7 +199,7 @@ async def link(client_socket, data):
         pass
     finally:
         connectedClients.remove(client_socket)
-
+        
 async def deleteTag(client_socket, data):
     try:
         sessionID = data["sessionToken"]
@@ -215,6 +217,27 @@ async def deleteTag(client_socket, data):
                 setData(["profileTags", username], tags)
                 
                 data = {"purpose": "deleteSuccess"}
+            else:
+                data = {"purpose": "fail"}
+        else:
+            data = {"purpose": "fail"}
+        await client_socket.send(json.dumps(data))
+    except:
+        pass
+    finally:
+        connectedClients.remove(client_socket)
+
+async def getPeople(client_socket, data):
+    try:
+        sessionID = data["sessionToken"]
+        username = data["username"]
+        if username in sessionTokens.keys():
+            if sessionTokens[username] == sessionID:
+                
+                people = getData(["communities", data["communityCode"], "data", "people"])
+                
+                data = {"purpose": "fetchSuccess",
+                        "people": people}
             else:
                 data = {"purpose": "fail"}
         else:
@@ -430,6 +453,12 @@ async def createCommunity(client_socket, data):
                     
                 currentCommunities.append(communityCode)
                 setData(["joinedCommunities", username], currentCommunities)
+                
+                communityList = []     
+                person = {}
+                person["username"] = username 
+                communityList.append(person)            
+                setData(["communities", communityCode, "data", "people"], communityList)
 
                 data = {"purpose": "createSuccess"}
             else:
@@ -460,6 +489,16 @@ async def joinCommunity(client_socket, data):
                         currentCommunities = []
                     if communityCode not in currentCommunities:
                         currentCommunities.append(communityCode)
+                        communityList = getData(["communities", communityCode, "data", "people"])
+                        if communityList == None:
+                            communityList = []
+                        
+                        person = {}
+                        person["username"] = username
+                        
+                        communityList.append(person)
+                        
+                        setData(["communities", communityCode, "data", "people"], communityList)
                         setData(["joinedCommunities", username], currentCommunities)
                         data = {"purpose": "joinSuccess"}
                     else:
