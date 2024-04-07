@@ -179,7 +179,9 @@ async def link(client_socket, data):
                     data = {"purpose": "missingPosts"}
                 else:
                     for post in posts:
-                        if calculateMatchScore(profileTags, post["tags"]) >= 0.6:
+                        score = calculateMatchScore(profileTags, post["tags"])
+                        if score >= 0.6:
+                            post["score"] = score
                             matches.append(post)
                     if len(matches) == 0:
                         data = {"purpose": "noMatchesFound"}

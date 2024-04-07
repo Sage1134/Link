@@ -17,6 +17,7 @@ const linkButton = document.getElementById("linkButton");
 const homeButton = document.getElementById("homeButton");
 const linkPopup = document.getElementById("linkPopup");
 const matches = document.getElementById("matches");
+const communityButton = document.getElementById("communityButton");
 
 let tagsList = [];
 
@@ -45,6 +46,7 @@ function closeAllPopups() {
 }
 
 function fetchUserCommunities() {
+    localStorage.removeItem("currentCommunity");
     const isLocalConnection = window.location.hostname === "10.0.0.138";
     const socket = new WebSocket(isLocalConnection ? "ws://10.0.0.138:1134" : "ws://99.246.0.254:1134");
     const communityCode = getLocalStorageItem("currentCommunity");
@@ -77,8 +79,6 @@ function updateCommunitiesUI(communities) {
     communitiesPage.style.display = "Flex";
     communityInfoPage.style.display = "None";
     communitiesPage.innerHTML = "";
-
-    setLocalStorageItem("currentCommunity", null);
 
     postButton.style.display = "None";
     joinCommunityBtn.style.display = "Block";
@@ -211,6 +211,10 @@ function updateExtracurricularsUI(extracurriculars) {
     const communityInfoDiv = document.getElementById("communityInfo");
     communityInfoDiv.innerHTML = "";
 
+    const newParagraph = document.createElement("p");
+    newParagraph.textContent = "Community Code: " + getLocalStorageItem("currentCommunity");
+    communityInfoDiv.appendChild(newParagraph);
+
     joinCommunityBtn.style.display = "None";
     postButton.style.display = "Block";
 
@@ -278,6 +282,7 @@ joinSubmitBtn.addEventListener("click", function() {
     socket.onmessage = function(event) {
         var data = JSON.parse(event.data);
         if (data.purpose == "joinSuccess") {
+            closeAllPopups();
             fetchUserCommunities();
         } else if (data.purpose == "alreadyJoined") {
             console.log("already");
@@ -314,6 +319,7 @@ createSubmitBtn.addEventListener("click", function() {
         socket.onmessage = function(event) {
             var data = JSON.parse(event.data);
             if (data.purpose == "createSuccess") {
+                closeAllPopups();
                 fetchUserCommunities();
             } else if (data.purpose == "fail") {
                 alert("Session Invalid Or Expired");
@@ -356,6 +362,7 @@ postSubmitBtn.addEventListener("click", function() {
         socket.onmessage = function(event) {
             var data = JSON.parse(event.data);
             if (data.purpose == "postSuccess") {
+                closeAllPopups();
                 clearTagsList();
                 document.getElementById("tagsContainer").innerHTML = "";
                 fetchCommunityExtracurriculars();
@@ -530,6 +537,10 @@ homeButton.addEventListener("click", function() {
     fetchUserCommunities();
 });
 
+communitiesButton.addEventListener("click", function() {
+    fetchUserCommunities();
+});
+
 linkButton.addEventListener("click", function() {
     const currentCommunity = getLocalStorageItem("currentCommunity");
 
@@ -561,6 +572,7 @@ linkButton.addEventListener("click", function() {
                 data.matches.forEach(match => {
                     const matchElement = document.createElement("div");
                     matchElement.classList.add("post-box");
+                    matchElement.classList.add("link-box");
             
                     const titleElement = document.createElement("h2");
                     titleElement.textContent = match.title;
@@ -570,10 +582,15 @@ linkButton.addEventListener("click", function() {
             
                     const tagsElement = document.createElement("p");
                     tagsElement.textContent = "Tags: " + match.tags.join(", ");
+
+                    const scoreElement = document.createElement("p");
+
+                    scoreElement.textContent = "Match Score: " + (match.score * 100).toFixed(2) + "%";
             
                     matchElement.appendChild(titleElement);
                     matchElement.appendChild(descriptionElement);
                     matchElement.appendChild(tagsElement);
+                    matchElement.appendChild(scoreElement);
             
                     matches.appendChild(matchElement);
                 });
