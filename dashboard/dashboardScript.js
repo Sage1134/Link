@@ -130,6 +130,8 @@ function updateCommunitiesUI(communities) {
 }
 
 peopleButton.addEventListener("click", function() {
+    const currentCommunity = getLocalStorageItem("currentCommunity");
+    
     if (currentCommunity == undefined || currentCommunity == null) {
         alert("Open a community page!");
     }

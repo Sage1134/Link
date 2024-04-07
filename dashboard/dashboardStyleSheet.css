@@ -135,6 +135,9 @@ button {
     text-align: center;
     background-color: #24252A;
     box-shadow: 4px 0 10px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-wrap: nowrap;
 }
 
 #communitiesHeader {
