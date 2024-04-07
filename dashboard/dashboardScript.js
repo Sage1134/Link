@@ -8,11 +8,11 @@ const createBtn = document.getElementById("createBtn");
 const joinPopup = document.getElementById("joinPopup");
 const createPopup = document.getElementById("createPopup");
 const postPopup = document.getElementById("postPopup");
-const profileTagsPopup = document.getElementById("profileTagsPopup")
+const profileTagsPopup = document.getElementById("profileTagsPopup");
 const closeButtons = document.querySelectorAll(".close");
 const communitiesPage = document.getElementById("communities");
 const communityInfoPage = document.getElementById("communityInfo");
-const postButton = document.getElementById("postButton")
+const postButton = document.getElementById("postButton");
 
 let tagsList = [];
 
@@ -61,8 +61,7 @@ function fetchUserCommunities() {
         if (data.purpose === "fetchSuccess") {
             updateCommunitiesUI(data.communities);
             updateSidebar(data.communities);
-        }
-        else if (data.purpose == "fail") {
+        } else if (data.purpose == "fail") {
             alert("Session Invalid Or Expired");
             window.location.href = "../signIn/signIn.html";
         }
@@ -76,9 +75,11 @@ function updateCommunitiesUI(communities) {
     communityInfoPage.style.display = "None";
     communitiesDiv.innerHTML = "";
 
+    setLocalStorageItem("currentCommunity", null);
+
     postButton.style.display = "None";
     joinCommunityBtn.style.display = "Block";
-    
+
     communities.forEach(community => {
         const communityElement = document.createElement("div");
         communityElement.classList.add("community-box");
@@ -96,8 +97,8 @@ function updateCommunitiesUI(communities) {
                 sessionToken: sessionID,
                 communityCode: communityCode
             };
-            
-            setLocalStorageItem("currentCommunity", communityCode)
+
+            setLocalStorageItem("currentCommunity", communityCode);
 
             socket.onopen = function(event) {
                 socket.send(JSON.stringify(data));
@@ -109,14 +110,13 @@ function updateCommunitiesUI(communities) {
                     communitiesPage.style.display = "None";
                     communityInfoPage.style.display = "Block";
 
-                    fetchCommunityExtracurriculars()
-                }
-                else if (data.purpose == "fail") {
+                    fetchCommunityExtracurriculars();
+                } else if (data.purpose == "fail") {
                     alert("Session Invalid Or Expired");
                     window.location.href = "../signIn/signIn.html";
                 }
                 socket.close(1000, "Closing Connection");
-            };        
+            };
         });
 
         communitiesDiv.appendChild(communityElement);
@@ -135,7 +135,7 @@ function updateSidebar(joinedCommunities) {
     communitiesSidebar.innerHTML = "";
 
     joinedCommunities.forEach(community => {
-        const communityButton = document.createElement("button"); 
+        const communityButton = document.createElement("button");
         communityButton.textContent = community.communityName;
         communityButton.dataset.communityCode = community.communityCode;
 
@@ -150,8 +150,8 @@ function updateSidebar(joinedCommunities) {
                 sessionToken: sessionID,
                 communityCode: communityCode
             };
-            
-            setLocalStorageItem("currentCommunity", communityCode)
+
+            setLocalStorageItem("currentCommunity", communityCode);
 
             socket.onopen = function(event) {
                 socket.send(JSON.stringify(data));
@@ -164,13 +164,12 @@ function updateSidebar(joinedCommunities) {
                     communityInfoPage.style.display = "Block";
 
                     fetchCommunityExtracurriculars();
-                }
-                else if (data.purpose == "fail") {
+                } else if (data.purpose == "fail") {
                     alert("Session Invalid Or Expired");
                     window.location.href = "../signIn/signIn.html";
                 }
                 socket.close(1000, "Closing Connection");
-            };       
+            };
         });
 
         communitiesSidebar.appendChild(communityButton);
@@ -197,8 +196,7 @@ function fetchCommunityExtracurriculars() {
         const data = JSON.parse(event.data);
         if (data.purpose === "fetchSuccess") {
             updateExtracurricularsUI(data.extracurriculars);
-        }
-        else if (data.purpose == "fail") {
+        } else if (data.purpose == "fail") {
             alert("Session Invalid Or Expired");
             window.location.href = "../signIn/signIn.html";
         }
@@ -212,28 +210,24 @@ function updateExtracurricularsUI(extracurriculars) {
 
     joinCommunityBtn.style.display = "None";
     postButton.style.display = "Block";
-    
+
     extracurriculars.forEach(extracurricular => {
         const postElement = document.createElement("div");
         postElement.classList.add("post-box");
-    
+
         const titleElement = document.createElement("h2");
         titleElement.textContent = extracurricular.title;
-    
+
         const descriptionElement = document.createElement("p");
         descriptionElement.textContent = extracurricular.description;
-    
+
         const tagsElement = document.createElement("p");
-        if (extracurricular.tags.length > 0) {
-            tagsElement.textContent = "Tags: " + extracurricular.tags.join(", ");
-        } else {
-            tagsElement.textContent = "Tags: None";
-        }
-    
+        tagsElement.textContent = extracurricular.tags.length > 0 ? "Tags: " + extracurricular.tags.join(", ") : "Tags: None";
+
         postElement.appendChild(titleElement);
         postElement.appendChild(descriptionElement);
         postElement.appendChild(tagsElement);
-    
+
         communityInfoDiv.appendChild(postElement);
     });
 }
@@ -249,11 +243,6 @@ joinBtn.addEventListener("click", function() {
     joinPopup.style.display = "block";
 });
 
-joinBtn.addEventListener("click", function() {
-    communityPopup.style.display = "none";
-    joinPopup.style.display = "block";
-});
-
 createBtn.addEventListener("click", function() {
     communityPopup.style.display = "none";
     createPopup.style.display = "block";
@@ -262,7 +251,7 @@ createBtn.addEventListener("click", function() {
 closeButtons.forEach(button => {
     button.addEventListener("click", function() {
         button.closest(".popup").style.display = "none";
-  });
+    });
 });
 
 joinSubmitBtn.addEventListener("click", function() {
@@ -276,8 +265,8 @@ joinSubmitBtn.addEventListener("click", function() {
         sessionToken: sessionID,
         communityCode: communityCode
     };
-    
-    socket.onopen = function (event) {
+
+    socket.onopen = function(event) {
         socket.send(JSON.stringify(data));
     };
 
@@ -287,14 +276,11 @@ joinSubmitBtn.addEventListener("click", function() {
         var data = JSON.parse(event.data);
         if (data.purpose == "joinSuccess") {
             fetchUserCommunities();
-        }
-        else if (data.purpose == "alreadyJoined") {
-            console.log("already")
-        }
-        else if (data.purpose == "communityNotFound") {
-            console.log("notFound")
-        }
-        else if (data.purpose == "fail") {
+        } else if (data.purpose == "alreadyJoined") {
+            console.log("already");
+        } else if (data.purpose == "communityNotFound") {
+            console.log("notFound");
+        } else if (data.purpose == "fail") {
             alert("Session Invalid Or Expired");
             window.location.href = "../signIn/signIn.html";
         }
@@ -302,7 +288,6 @@ joinSubmitBtn.addEventListener("click", function() {
         socket.close(1000, "Closing Connection");
     };
 });
-  
 
 createSubmitBtn.addEventListener("click", function() {
     const communityName = document.getElementById("communityNameInput").value;
@@ -316,8 +301,8 @@ createSubmitBtn.addEventListener("click", function() {
             sessionToken: sessionID,
             communityName: communityName
         };
-    
-        socket.onopen = function (event) {
+
+        socket.onopen = function(event) {
             socket.send(JSON.stringify(data));
         };
 
@@ -327,16 +312,14 @@ createSubmitBtn.addEventListener("click", function() {
             var data = JSON.parse(event.data);
             if (data.purpose == "createSuccess") {
                 fetchUserCommunities();
-            }
-            else if (data.purpose == "fail") {
+            } else if (data.purpose == "fail") {
                 alert("Session Invalid Or Expired");
                 window.location.href = "../signIn/signIn.html";
             }
 
             socket.close(1000, "Closing Connection");
         };
-    }
-    else {
+    } else {
         alert("Please enter a community name.");
     }
 });
@@ -359,7 +342,7 @@ postSubmitBtn.addEventListener("click", function() {
             tags: tagsList
         };
 
-        socket.onopen = function (event) {
+        socket.onopen = function(event) {
             socket.send(JSON.stringify(data));
         };
 
@@ -373,8 +356,7 @@ postSubmitBtn.addEventListener("click", function() {
                 clearTagsList();
                 document.getElementById("tagsContainer").innerHTML = "";
                 fetchCommunityExtracurriculars();
-            }
-            else if (data.purpose == "fail") {
+            } else if (data.purpose == "fail") {
                 alert("Session Invalid Or Expired");
                 window.location.href = "../signIn/signIn.html";
             }
@@ -413,9 +395,9 @@ document.getElementById("signOutButton").addEventListener("click", function() {
         purpose: "signOut",
         username: username,
         sessionToken: sessionID,
-      };
-    
-    socket.onopen = function (event) {
+    };
+
+    socket.onopen = function(event) {
         socket.send(JSON.stringify(data));
     };
 
@@ -424,13 +406,12 @@ document.getElementById("signOutButton").addEventListener("click", function() {
         if (data.purpose == "fail") {
             alert("Session Invalid Or Expired");
             window.location.href = "../signIn/signIn.html";
-        }
-        else if (data.purpose == "signOutSuccess") {
+        } else if (data.purpose == "signOutSuccess") {
             localStorage.removeItem("username");
             localStorage.removeItem("sessionID");
             window.location.href = "../signIn/signIn.html";
         }
-        socket.close(1000, "Closing Connection");   
+        socket.close(1000, "Closing Connection");
     };
 });
 
@@ -438,13 +419,13 @@ document.getElementById("profileTagsButton").addEventListener("click", function(
     closeAllPopups();
     profileTagsPopup.style.display = "block";
     fetchUserTags();
-})
+});
 
 document.getElementById("profileTagsBox").addEventListener("keydown", function(event) {
     if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
         const tagInput = this.value.trim();
-        
+
         if (tagInput !== "") {
             const isLocalConnection = window.location.hostname === '10.0.0.138';
             const socket = new WebSocket(isLocalConnection ? 'ws://10.0.0.138:1134' : 'ws://99.245.65.253:1134');
@@ -455,8 +436,8 @@ document.getElementById("profileTagsBox").addEventListener("keydown", function(e
                 sessionToken: sessionID,
                 tag: tagInput
             };
-            
-            socket.onopen = function (event) {
+
+            socket.onopen = function(event) {
                 socket.send(JSON.stringify(data));
             };
 
@@ -465,12 +446,11 @@ document.getElementById("profileTagsBox").addEventListener("keydown", function(e
                 if (data.purpose == "fail") {
                     alert("Session Invalid Or Expired");
                     window.location.href = "../signIn/signIn.html";
-                }
-                else if (data.purpose == "tagAddSuccess") {
+                } else if (data.purpose == "tagAddSuccess") {
                     document.getElementById("profileTagsBox").value = "";
                     fetchUserTags();
                 }
-                socket.close(1000, "Closing Connection");   
+                socket.close(1000, "Closing Connection");
             };
         }
     }
@@ -494,8 +474,7 @@ function fetchUserTags() {
         const data = JSON.parse(event.data);
         if (data.purpose === "fetchSuccess") {
             updateTagsDisplay(data.tags);
-        }
-        else if (data.purpose == "fail") {
+        } else if (data.purpose == "fail") {
             alert("Session Invalid Or Expired");
             window.location.href = "../signIn/signIn.html";
         }
@@ -544,11 +523,9 @@ function updateTagsDisplay(tags) {
     });
 }
 
-
 document.getElementById("homeButton").addEventListener("click", function() {
     fetchUserCommunities();
 });
-
 
 window.addEventListener("load", fetchUserCommunities);
 

@@ -15,14 +15,12 @@
             <h1 id="titleText">Link</h1>
 
         </div>
-        <nav>
-            <ul class="nav__links">
-                <li><a href="">Communities</a></li>
-                <li><a href="">Link!</a></li>
-                <li><a href="">Classes</a></li>
-            </ul>
-        </nav>
-        <a class="cta" href="#"><button>Sign Out</button></a>
+        <div id="nav">
+            <button>Communities</button>
+            <button id="linkButton">Link!</button>
+            <button>Placeholder</button>
+        </div>
+        <a class="cta" href="#" id="signOutButton"><button>Sign Out</button></a>
     </div>
     <div id="container">
         <div id="sideBar">
@@ -80,6 +78,13 @@
                     <p>Manage Profile Tags</p>
                     <input type="text" id="profileTagsBox" placeholder="Tags">
                     <div id="profileTagsContainer"></div>
+                </div>
+            </div>
+            <div id="linkPopup" class="popup">
+                <div class="popup-content">
+                    <span class="close">X</span>
+                    <p>Link!</p>
+                    <div id="matches"></div>
                 </div>
             </div>
         </div>

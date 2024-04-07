@@ -30,8 +30,6 @@ body {
 
 }
 
-#head li,
-a,
 button {
     font-family: 'Rubik', sans-serif;
     font-weight: 500;
@@ -271,6 +269,15 @@ textarea {
 
 #postButton:active {
     background-color: rgb(20, 140, 80);
+}
+
+#nav button {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: #edf0ed;
+    text-decoration: none;
+    background-color: rgb(30, 30, 35);
 }
 
 ::-webkit-scrollbar {
