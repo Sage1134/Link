@@ -26,16 +26,17 @@
     </div>
     <div id="container">
         <div id="sideBar">
+            <h2 id="navigationHeader">Navigation</h2>
             <button id="homeButton">Home</button>
+            <button id="profileTagsButton">Profile Tags</button>
+            <h2 id="communitiesHeader">Communities</h2>
             <div id="communitiesSidebar"></div>
-            <button id="signOutButton">Sign Out</button>
         </div>
         <div id="content">
             <div id="communities"></div>
             <div id="communityInfo"></div>
             <button id="joinCommunity">+</button>
             <button id="postButton">Post</button>
-
             <div id="communityPopup" class="popup">
                 <div class="popup-content">
                     <span class="close">X</span>
@@ -71,6 +72,14 @@
                     <input type="text" id="postTags" placeholder="Tags">
                     <button id="postSubmitBtn">Post</button>
                     <div id="tagsContainer"></div>
+                </div>
+            </div>
+            <div id="profileTagsPopup" class="popup">
+                <div class="popup-content">
+                    <span class="close">X</span>
+                    <p>Manage Profile Tags</p>
+                    <input type="text" id="profileTagsBox" placeholder="Tags">
+                    <div id="profileTagsContainer"></div>
                 </div>
             </div>
         </div>
