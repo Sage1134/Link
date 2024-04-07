@@ -13,6 +13,10 @@ const closeButtons = document.querySelectorAll(".close");
 const communitiesPage = document.getElementById("communities");
 const communityInfoPage = document.getElementById("communityInfo");
 const postButton = document.getElementById("postButton");
+const linkButton = document.getElementById("linkButton");
+const homeButton = document.getElementById("homeButton");
+const linkPopup = document.getElementById("linkPopup");
+const matches = document.getElementById("matches");
 
 let tagsList = [];
 
@@ -70,10 +74,9 @@ function fetchUserCommunities() {
 }
 
 function updateCommunitiesUI(communities) {
-    const communitiesDiv = document.getElementById("communities");
-    communitiesDiv.style.display = "Flex";
+    communitiesPage.style.display = "Flex";
     communityInfoPage.style.display = "None";
-    communitiesDiv.innerHTML = "";
+    communitiesPage.innerHTML = "";
 
     setLocalStorageItem("currentCommunity", null);
 
@@ -119,7 +122,7 @@ function updateCommunitiesUI(communities) {
             };
         });
 
-        communitiesDiv.appendChild(communityElement);
+        communitiesPage.appendChild(communityElement);
     });
 }
 
@@ -523,9 +526,71 @@ function updateTagsDisplay(tags) {
     });
 }
 
-document.getElementById("homeButton").addEventListener("click", function() {
+homeButton.addEventListener("click", function() {
     fetchUserCommunities();
 });
+
+linkButton.addEventListener("click", function() {
+    const currentCommunity = getLocalStorageItem("currentCommunity");
+
+    if (currentCommunity == undefined || currentCommunity == null) {
+        alert("Open a community page!");
+    }
+    else {
+        const isLocalConnection = window.location.hostname === "10.0.0.138";
+        const socket = new WebSocket(isLocalConnection ? "ws://10.0.0.138:1134" : "ws://99.246.0.254:1134");
+
+        const data = {
+            purpose: "link",
+            username: username,
+            sessionToken: sessionID,
+            community: currentCommunity
+        };
+
+        socket.onopen = function(event) {
+            socket.send(JSON.stringify(data));
+        };
+
+        socket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            if (data.purpose === "linkSuccess") {
+                closeAllPopups();
+                matches.innerHTML = "";
+                linkPopup.style.display = "Block";
+
+                data.matches.forEach(match => {
+                    const matchElement = document.createElement("div");
+                    matchElement.classList.add("post-box");
+            
+                    const titleElement = document.createElement("h2");
+                    titleElement.textContent = match.title;
+            
+                    const descriptionElement = document.createElement("p");
+                    descriptionElement.textContent = match.description;
+            
+                    const tagsElement = document.createElement("p");
+                    tagsElement.textContent = "Tags: " + match.tags.join(", ");
+            
+                    matchElement.appendChild(titleElement);
+                    matchElement.appendChild(descriptionElement);
+                    matchElement.appendChild(tagsElement);
+            
+                    matches.appendChild(matchElement);
+                });
+            } else if (data.purpose == "missingTags") {
+                alert("Add some tags to your profile first!")
+            } else if (data.purpose == "missingPosts") {
+                alert("No posts found in this community! Consider posting something.")
+            } else if (data.purpose == "noMatchesFound") {
+                alert("No matches found in this community!")
+            } else if (data.purpose == "fail") {
+                alert("Session Invalid Or Expired");
+                window.location.href = "../signIn/signIn.html";
+            }
+            socket.close(1000, "Closing Connection");
+        };
+    }
+})
 
 window.addEventListener("load", fetchUserCommunities);
 

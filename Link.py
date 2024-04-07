@@ -151,14 +151,56 @@ async def newClientConnected(client_socket):
             await getUserTags(client_socket, data)
         elif data["purpose"] == "deleteTag":
             await deleteTag(client_socket, data)
+        elif data["purpose"] == "link":
+            await link(client_socket, data)
     except:
         pass
+
+async def link(client_socket, data):
+    try:
+        sessionID = data["sessionToken"]
+        username = data["username"]
+        community = data["community"]
+        
+        if username in sessionTokens.keys():
+            if sessionTokens[username] == sessionID:
+                matches = []
+                posts = getData(["communities", community, "extracurriculars"])
+                profileTags = getData(["profileTags", username])
+                
+                if profileTags == None:
+                    profileTags = []
+                if posts == None:
+                    posts = []
+                
+                if len(profileTags) == 0:
+                    data = {"purpose": "missingTags"}
+                elif len(posts) == 0:
+                    data = {"purpose": "missingPosts"}
+                else:
+                    for post in posts:
+                        if calculateMatchScore(profileTags, post["tags"]) >= 0.6:
+                            matches.append(post)
+                    if len(matches) == 0:
+                        data = {"purpose": "noMatchesFound"}
+                    else:
+                        data = {"purpose": "linkSuccess",
+                                "matches": matches}
+            else:
+                data = {"purpose": "fail"}
+        else:
+            data = {"purpose": "fail"}
+        await client_socket.send(json.dumps(data))
+    except:
+        pass
+    finally:
+        connectedClients.remove(client_socket)
 
 async def deleteTag(client_socket, data):
     try:
         sessionID = data["sessionToken"]
         username = data["username"]
-        tag = data["tag"].strip()
+        tag = data["tag"].strip().lower()
         
         if username in sessionTokens.keys():
             if sessionTokens[username] == sessionID:
@@ -206,7 +248,7 @@ async def addTag(client_socket, data):
     try:
         sessionID = data["sessionToken"]
         username = data["username"]
-        tag = data["tag"].strip()
+        tag = data["tag"].strip().lower()
         
         if username in sessionTokens.keys():
             if sessionTokens[username] == sessionID:
