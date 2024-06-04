@@ -1,3 +1,5 @@
+const localIP = "10.13.207.28";
+
 function signIn(event) {
     event.preventDefault();
 
@@ -10,8 +12,8 @@ function signIn(event) {
         password: password,
       };
 
-    const isLocalConnection = window.location.hostname === "10.0.0.138";
-    const socket = new WebSocket(isLocalConnection ? "ws://10.0.0.138:1134" : "ws://99.246.0.254:1134");
+    const isLocalConnection = window.location.hostname === localIP;
+    const socket = new WebSocket(isLocalConnection ? "ws://" + localIP + ":1134" : "ws://99.246.0.254:1134");
 
     socket.onopen = function (event) {
         socket.send(JSON.stringify(data));

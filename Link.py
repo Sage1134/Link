@@ -560,8 +560,7 @@ async def signIn(client_socket, data):
         pass
     finally:
         connectedClients.remove(client_socket)
-
-ip, port = "10.0.0.138", 1134
+        
 async def startServer():
     print("Server Started")
     await websockets.serve(newClientConnected, ip, port)

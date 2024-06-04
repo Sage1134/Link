@@ -21,7 +21,7 @@ const communityButton = document.getElementById("communityButton");
 const peopleButton = document.getElementById("peopleButton");
 const peopleDiv = document.getElementById("people");
 const peoplePopup = document.getElementById("peoplePopup")
-
+const localIP = "10.13.207.28";
 let tagsList = [];
 
 function clearTagsList() {
@@ -50,8 +50,8 @@ function closeAllPopups() {
 
 function fetchUserCommunities() {
     localStorage.removeItem("currentCommunity");
-    const isLocalConnection = window.location.hostname === "10.0.0.138";
-    const socket = new WebSocket(isLocalConnection ? "ws://10.0.0.138:1134" : "ws://99.246.0.254:1134");
+    const isLocalConnection = window.location.hostname === localIP;
+    const socket = new WebSocket(isLocalConnection ? "ws://" + localIP + ":1134" : "ws://99.246.0.254:1134");
     const communityCode = getLocalStorageItem("currentCommunity");
 
     const data = {
@@ -94,8 +94,8 @@ function updateCommunitiesUI(communities) {
 
         communityElement.addEventListener("click", function() {
             const communityCode = this.dataset.communityCode;
-            const isLocalConnection = window.location.hostname === "10.0.0.138";
-            const socket = new WebSocket(isLocalConnection ? "ws://10.0.0.138:1134" : "ws://99.246.0.254:1134");
+            const isLocalConnection = window.location.hostname === localIP;
+            const socket = new WebSocket(isLocalConnection ? "ws://" + localIP + ":1134" : "ws://99.246.0.254:1134");
 
             const data = {
                 purpose: "getCommunityExtracurriculars",
@@ -142,8 +142,8 @@ peopleButton.addEventListener("click", function() {
 });
 
 function fetchCommunityPeople() {
-    const isLocalConnection = window.location.hostname === "10.0.0.138";
-    const socket = new WebSocket(isLocalConnection ? "ws://10.0.0.138:1134" : "ws://99.246.0.254:1134");
+    const isLocalConnection = window.location.hostname === localIP;
+    const socket = new WebSocket(isLocalConnection ? "ws://" + localIP + ":1134" : "ws://99.246.0.254:1134");
     const communityCode = getLocalStorageItem("currentCommunity");
 
     const data = {
@@ -199,8 +199,8 @@ function updateSidebar(joinedCommunities) {
 
         communityButton.addEventListener("click", function() {
             const communityCode = this.dataset.communityCode;
-            const isLocalConnection = window.location.hostname === "10.0.0.138";
-            const socket = new WebSocket(isLocalConnection ? "ws://10.0.0.138:1134" : "ws://99.246.0.254:1134");
+            const isLocalConnection = window.location.hostname === localIP;
+            const socket = new WebSocket(isLocalConnection ? "ws://" + localIP + ":1134" : "ws://99.246.0.254:1134");
 
             const data = {
                 purpose: "getCommunityExtracurriculars",
@@ -235,8 +235,8 @@ function updateSidebar(joinedCommunities) {
 }
 
 function fetchCommunityExtracurriculars() {
-    const isLocalConnection = window.location.hostname === "10.0.0.138";
-    const socket = new WebSocket(isLocalConnection ? "ws://10.0.0.138:1134" : "ws://99.246.0.254:1134");
+    const isLocalConnection = window.location.hostname === localIP;
+    const socket = new WebSocket(isLocalConnection ? "ws://" + localIP + ":1134" : "ws://99.246.0.254:1134");
     const communityCode = getLocalStorageItem("currentCommunity");
 
     const data = {
@@ -348,8 +348,8 @@ closeButtons.forEach(button => {
 joinSubmitBtn.addEventListener("click", function() {
     const communityCode = document.getElementById("communityCodeInput").value;
 
-    const isLocalConnection = window.location.hostname === "10.0.0.138";
-    const socket = new WebSocket(isLocalConnection ? "ws://10.0.0.138:1134" : "ws://99.246.0.254:1134");
+    const isLocalConnection = window.location.hostname === localIP;
+    const socket = new WebSocket(isLocalConnection ? "ws://" + localIP + ":1134" : "ws://99.246.0.254:1134");
     const data = {
         purpose: "joinCommunity",
         username: username,
@@ -387,8 +387,8 @@ createSubmitBtn.addEventListener("click", function() {
     const communityName = document.getElementById("communityNameInput").value;
 
     if (communityName) {
-        const isLocalConnection = window.location.hostname === "10.0.0.138";
-        const socket = new WebSocket(isLocalConnection ? "ws://10.0.0.138:1134" : "ws://99.246.0.254:1134");
+        const isLocalConnection = window.location.hostname === localIP;
+        const socket = new WebSocket(isLocalConnection ? "ws://" + localIP + ":1134" : "ws://99.246.0.254:1134");
         const data = {
             purpose: "createCommunity",
             username: username,
@@ -425,8 +425,8 @@ postSubmitBtn.addEventListener("click", function() {
     const postDescription = document.getElementById("postDescription").value.trim();
 
     if (communityCode && postTitle && postDescription) {
-        const isLocalConnection = window.location.hostname === "10.0.0.138";
-        const socket = new WebSocket(isLocalConnection ? "ws://10.0.0.138:1134" : "ws://99.246.0.254:1134");
+        const isLocalConnection = window.location.hostname === localIP;
+        const socket = new WebSocket(isLocalConnection ? "ws://" + localIP + ":1134" : "ws://99.246.0.254:1134");
         const data = {
             purpose: "createPost",
             username: username,
@@ -489,8 +489,8 @@ document.getElementById("postTags").addEventListener("keydown", function(event) 
 });
 
 document.getElementById("signOutButton").addEventListener("click", function() {
-    const isLocalConnection = window.location.hostname === '10.0.0.138';
-    const socket = new WebSocket(isLocalConnection ? 'ws://10.0.0.138:1134' : 'ws://99.246.0.254:1134');
+    const isLocalConnection = window.location.hostname === '" + localIP + "';
+    const socket = new WebSocket(isLocalConnection ? 'ws://" + localIP + ":1134' : 'ws://99.246.0.254:1134');
 
     const data = {
         purpose: "signOut",
@@ -528,8 +528,8 @@ document.getElementById("profileTagsBox").addEventListener("keydown", function(e
         const tagInput = this.value.trim();
 
         if (tagInput !== "") {
-            const isLocalConnection = window.location.hostname === '10.0.0.138';
-            const socket = new WebSocket(isLocalConnection ? 'ws://10.0.0.138:1134' : 'ws://99.246.0.254:1134');
+            const isLocalConnection = window.location.hostname === '" + localIP + "';
+            const socket = new WebSocket(isLocalConnection ? 'ws://" + localIP + ":1134' : 'ws://99.246.0.254:1134');
 
             const data = {
                 purpose: "addTag",
@@ -562,8 +562,8 @@ document.getElementById("profileTagsBox").addEventListener("keydown", function(e
 });
 
 function fetchUserTags() {
-    const isLocalConnection = window.location.hostname === "10.0.0.138";
-    const socket = new WebSocket(isLocalConnection ? "ws://10.0.0.138:1134" : "ws://99.246.0.254:1134");
+    const isLocalConnection = window.location.hostname === localIP;
+    const socket = new WebSocket(isLocalConnection ? "ws://" + localIP + ":1134" : "ws://99.246.0.254:1134");
 
     const data = {
         purpose: "getUserTags",
@@ -598,8 +598,8 @@ function updateTagsDisplay(tags) {
         tagElement.dataset.tagName = tag;
 
         tagElement.addEventListener("click", function() {
-            const isLocalConnection = window.location.hostname === "10.0.0.138";
-            const socket = new WebSocket(isLocalConnection ? "ws://10.0.0.138:1134" : "ws://99.246.0.254:1134");
+            const isLocalConnection = window.location.hostname === localIP;
+            const socket = new WebSocket(isLocalConnection ? "ws://" + localIP + ":1134" : "ws://99.246.0.254:1134");
 
             const data = {
                 purpose: "deleteTag",
@@ -643,8 +643,8 @@ linkButton.addEventListener("click", function() {
         alert("Open a community page!");
     }
     else {
-        const isLocalConnection = window.location.hostname === "10.0.0.138";
-        const socket = new WebSocket(isLocalConnection ? "ws://10.0.0.138:1134" : "ws://99.246.0.254:1134");
+        const isLocalConnection = window.location.hostname === localIP;
+        const socket = new WebSocket(isLocalConnection ? "ws://" + localIP + ":1134" : "ws://99.246.0.254:1134");
 
         const data = {
             purpose: "link",
