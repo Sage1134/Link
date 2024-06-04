@@ -489,8 +489,8 @@ document.getElementById("postTags").addEventListener("keydown", function(event) 
 });
 
 document.getElementById("signOutButton").addEventListener("click", function() {
-    const isLocalConnection = window.location.hostname === '" + localIP + "';
-    const socket = new WebSocket(isLocalConnection ? 'ws://" + localIP + ":1134' : 'ws://99.246.0.254:1134');
+    const isLocalConnection = window.location.hostname === localIP;
+    const socket = new WebSocket(isLocalConnection ? 'ws://' + localIP + ':1134' : 'ws://99.246.0.254:1134');
 
     const data = {
         purpose: "signOut",
@@ -529,7 +529,7 @@ document.getElementById("profileTagsBox").addEventListener("keydown", function(e
 
         if (tagInput !== "") {
             const isLocalConnection = window.location.hostname === '" + localIP + "';
-            const socket = new WebSocket(isLocalConnection ? 'ws://" + localIP + ":1134' : 'ws://99.246.0.254:1134');
+            const socket = new WebSocket(isLocalConnection ? 'ws://' + localIP + ':1134' : 'ws://99.246.0.254:1134');
 
             const data = {
                 purpose: "addTag",

@@ -564,7 +564,7 @@ async def signIn(client_socket, data):
 async def startServer():
     print("Server Started")
     await websockets.serve(newClientConnected, ip, port)
-    
+
 event_loop = asyncio.get_event_loop()
 event_loop.run_until_complete(startServer())
 event_loop.run_forever()
